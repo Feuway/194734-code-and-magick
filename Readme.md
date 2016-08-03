@@ -1,7 +1,7 @@
 # Личный проект «Код и Магия» [![Build status][travis-image]][travis-url] [![Dependency status][dependency-image]][dependency-url]
 
 * Студент: [Денис Смирнов](https://up.htmlacademy.ru/javascript/6/user/194734).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Духовняк] (https://up.htmlacademy.ru/javascript/6/user/126025).
 
 ---
 
