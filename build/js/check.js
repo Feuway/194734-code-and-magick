@@ -18,7 +18,7 @@ function getMessage (a, b) {
         return "Я прыгнул на " + calcHeightInCentimeters(a) + " сантиметров";
     }
 
-    if (Array.isArray(a)) {
+    if (Array.isArray(a) && !Array.isArray(b)) {
 
         var numberOfSteps = 0;
 
