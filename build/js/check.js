@@ -1,16 +1,25 @@
 function getMessage (a, b) {
 
     if (typeof a === "boolean") {
-        return "Я попал в " + b;
-    } else {
-        return "Я никуда не попал";
+
+        if (a) {
+            return "Я попал в " + b;
+        } else {
+            return "Я никуда не попал";
+        }
+
     }
 
+    var calcHeightInCentimeters = function (i) {
+        return i * 100;
+    };
+
     if (typeof a === "number") {
-        return "Я прыгнул на " + a * 100 + " сантиметров";
+        return "Я прыгнул на " + calcHeightInCentimeters(a) + " сантиметров";
     }
 
     if (Array.isArray(a)) {
+
         var numberOfSteps = 0;
 
         for (var i = 0; i < a.length; i++) {
@@ -31,4 +40,3 @@ function getMessage (a, b) {
         return "Я прошёл " + distancePath + " метров";
     }
 }
-
