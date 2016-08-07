@@ -391,22 +391,53 @@ window.Game = (function() {
       }
     },
 
+    transferText: function (text) {
+      var words = text.split('  ');
+
+      for (var i = 0; i < words.length; i++) {
+        var y = 75 + i * 20;
+
+        this.ctx.fillText(words[i], 335, y);
+      }
+    },
+
     /**
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
+      this.ctx.beginPath();
+      this.ctx.moveTo(330, 60);
+      this.ctx.lineTo(610, 50);
+      this.ctx.lineTo(610, 220);
+      this.ctx.lineTo(310, 210);
+      this.ctx.closePath();
+      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      this.ctx.fill();
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(320, 50);
+      this.ctx.lineTo(600, 40);
+      this.ctx.lineTo(600, 210);
+      this.ctx.lineTo(300, 200);
+      this.ctx.closePath();
+      this.ctx.fillStyle = '#FFFFFF';
+      this.ctx.fill();
+
+      this.ctx.font = '16px PT Mono';
+      this.ctx.fillStyle = '#000';
+
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          console.log('you have won!');
+          this.transferText('Ура!!! Мои поздравления.  Ты смог воспользоваться  фаерболом!');
           break;
         case Verdict.FAIL:
-          console.log('you have failed!');
+          this.transferText('Неудача(((  Попробуй еще раз!');
           break;
         case Verdict.PAUSE:
-          console.log('game is on pause!');
+          this.transferText('Пауза!  Нажми Space, чтобы  продолжить!');
           break;
         case Verdict.INTRO:
-          console.log('welcome to the game! Press Space to start');
+          this.transferText('Добро пожаловать в игру!  Для начала игры нажми  Space. Чтобы пулять  фаерболлами жми Shift. А  если устал (нет) - ESC.');
           break;
       }
     },
