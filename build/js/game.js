@@ -391,7 +391,7 @@ window.Game = (function() {
       }
     },
 
-    transferText: function (text) {
+    transferText: function(text) {
       var words = text.split('  ');
 
       for (var i = 0; i < words.length; i++) {
