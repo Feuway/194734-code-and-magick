@@ -390,7 +390,9 @@ window.Game = (function() {
         window.removeEventListener('keydown', this._pauseListener);
       }
     },
-
+    /**
+     * Отрисовка текста
+     */
     transferText: function(text) {
       var words = text.split('  ');
 
@@ -401,24 +403,52 @@ window.Game = (function() {
       }
     },
 
+    buildTextBlock: function() {
+      var me = this.state.objects.filter(function(object) {
+        return object.type === ObjectType.ME;
+      })[0];
+
+      this.ctx.moveTo(320, 50);
+      this.ctx.lineTo(600, 40);
+      this.ctx.lineTo(600, 210);
+      this.ctx.lineTo(300, 200);
+
+    },
+
     /**
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
+      var me = this.state.objects.filter(function(object) {
+        return object.type === ObjectType.ME;
+      })[0];
+
+      if (me.x + me.width + 305 > this.canvas.width) {
+        var x = [-30, -305, -305, -5];
+      } else {
+        x = [30 + me.width, 305 + me.width, 305 + me.width, 5 + me.width];
+      }
+
+      if (me.y + me.height - 260 > 0) {
+        var y = [-260, -250, -90, -70];
+      } else {
+        y = [-260, -250, -90, -70];
+      }
+
       this.ctx.beginPath();
-      this.ctx.moveTo(330, 60);
-      this.ctx.lineTo(610, 50);
-      this.ctx.lineTo(610, 220);
-      this.ctx.lineTo(310, 210);
+      this.ctx.moveTo(me.x + x[0] + 10, me.y + me.height + y[0] + 10);
+      this.ctx.lineTo(me.x + x[1] + 10, me.y + me.height + y[1] + 10);
+      this.ctx.lineTo(me.x + x[2] + 10, me.y + me.height + y[2] + 10);
+      this.ctx.lineTo(me.x + x[3] + 10, me.y + me.height + y[3] + 10);
       this.ctx.closePath();
       this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
       this.ctx.fill();
 
       this.ctx.beginPath();
-      this.ctx.moveTo(320, 50);
-      this.ctx.lineTo(600, 40);
-      this.ctx.lineTo(600, 210);
-      this.ctx.lineTo(300, 200);
+      this.ctx.moveTo(me.x + x[0], me.y + me.height + y[0]);
+      this.ctx.lineTo(me.x + x[1], me.y + me.height + y[1]);
+      this.ctx.lineTo(me.x + x[2], me.y + me.height + y[2]);
+      this.ctx.lineTo(me.x + x[3], me.y + me.height + y[3]);
       this.ctx.closePath();
       this.ctx.fillStyle = '#FFFFFF';
       this.ctx.fill();
