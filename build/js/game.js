@@ -390,68 +390,86 @@ window.Game = (function() {
         window.removeEventListener('keydown', this._pauseListener);
       }
     },
+
+    /**
+     * Отрисовка текстового блока и его тени
+     */
+    _drawRectangle: function(x, y, width, height, skewX, skewY, color, shadow) {
+      var mag = this.state.objects.filter(function(object) {
+        return object.type === ObjectType.ME;
+      })[0];
+      var startX = mag.x + mag.width + x + shadow;
+      var startY = mag.y - mag.height - y + shadow;
+      var endX = startX + width;
+      var endY = startY;
+
+      var widthX = width;
+      var skewWidth = skewX;
+      var heightY = height;
+      var skewHeight = skewY;
+
+      if (endX > this.canvas.width) {
+        startX = mag.x - x + shadow;
+        widthX *= -1;
+        skewWidth *= -1;
+      }
+
+      if (endY < 0) {
+        startY = mag.y + y + mag.height * 2 + shadow;
+        heightY *= -1;
+        skewHeight *= -1;
+      }
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(startX, startY);
+      this.ctx.lineTo(startX + widthX, startY + skewHeight);
+      this.ctx.lineTo(startX + widthX, startY + skewHeight + heightY);
+      this.ctx.lineTo(startX - skewWidth, startY + skewHeight * 2 + heightY);
+      this.ctx.closePath();
+      this.ctx.fillStyle = color;
+      this.ctx.fill();
+    },
+
     /**
      * Отрисовка текста
      */
-    transferText: function(text) {
-      var words = text.split('  ');
-
-      for (var i = 0; i < words.length; i++) {
-        var y = 75 + i * 20;
-
-        this.ctx.fillText(words[i], 335, y);
-      }
-    },
-
-    buildTextBlock: function() {
-      var me = this.state.objects.filter(function(object) {
-        return object.type === ObjectType.ME;
-      })[0];
-
-      this.ctx.moveTo(320, 50);
-      this.ctx.lineTo(600, 40);
-      this.ctx.lineTo(600, 210);
-      this.ctx.lineTo(300, 200);
-
-    },
+    // transferText: function(text, widthLine) {
+    //   var mag = this.state.objects.filter(function(object) {
+    //     return object.type === ObjectType.ME;
+    //   })[0];
+    //   var words = text.split(' ');
+    //   var line = "";
+    //
+    //   for (var i = 0; i < words.length; i++) {
+    //     var testLine = line + words[i] + ' ';
+    //     var testWidth = this.measureText(testLine).width;
+    //     if (testWidth > widthLine) {
+    //
+    //     } else {
+    //       line = testLine;
+    //     }
+    //     var x = mag.x + mag.width;
+    //     var y = 75 + i * 20;
+    //
+    //     this.ctx.fillText(words[i], , y);
+    //   }
+    // },
 
     /**
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
+      var RECT_COLOR = '#ffffff';
+      var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
+      var SHADOW_SHIFT = 10;
+      var RECTANGLE_WIDTH = 280;
+      var RECTANGLE_HEIGHT = 120;
       var me = this.state.objects.filter(function(object) {
         return object.type === ObjectType.ME;
       })[0];
 
-      if (me.x + me.width + 305 > this.canvas.width) {
-        var x = [-30, -305, -305, -5];
-      } else {
-        x = [30 + me.width, 305 + me.width, 305 + me.width, 5 + me.width];
-      }
-
-      if (me.y + me.height - 260 > 0) {
-        var y = [-260, -250, -90, -70];
-      } else {
-        y = [-260, -250, -90, -70];
-      }
-
-      this.ctx.beginPath();
-      this.ctx.moveTo(me.x + x[0] + 10, me.y + me.height + y[0] + 10);
-      this.ctx.lineTo(me.x + x[1] + 10, me.y + me.height + y[1] + 10);
-      this.ctx.lineTo(me.x + x[2] + 10, me.y + me.height + y[2] + 10);
-      this.ctx.lineTo(me.x + x[3] + 10, me.y + me.height + y[3] + 10);
-      this.ctx.closePath();
-      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-      this.ctx.fill();
-
-      this.ctx.beginPath();
-      this.ctx.moveTo(me.x + x[0], me.y + me.height + y[0]);
-      this.ctx.lineTo(me.x + x[1], me.y + me.height + y[1]);
-      this.ctx.lineTo(me.x + x[2], me.y + me.height + y[2]);
-      this.ctx.lineTo(me.x + x[3], me.y + me.height + y[3]);
-      this.ctx.closePath();
-      this.ctx.fillStyle = '#FFFFFF';
-      this.ctx.fill();
+      this._drawRectangle(30, 25, RECTANGLE_WIDTH, RECTANGLE_HEIGHT, 25, 10, SHADOW_COLOR, SHADOW_SHIFT);
+      this._drawRectangle(30, 25, RECTANGLE_WIDTH, RECTANGLE_HEIGHT, 25, 10, RECT_COLOR, 0);
 
       this.ctx.font = '16px PT Mono';
       this.ctx.fillStyle = '#000';
