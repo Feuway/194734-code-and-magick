@@ -464,9 +464,6 @@ window.Game = (function() {
       var SHADOW_SHIFT = 10;
       var RECTANGLE_WIDTH = 280;
       var RECTANGLE_HEIGHT = 120;
-      var me = this.state.objects.filter(function(object) {
-        return object.type === ObjectType.ME;
-      })[0];
 
       this._drawRectangle(30, 25, RECTANGLE_WIDTH, RECTANGLE_HEIGHT, 25, 10, SHADOW_COLOR, SHADOW_SHIFT);
       this._drawRectangle(30, 25, RECTANGLE_WIDTH, RECTANGLE_HEIGHT, 25, 10, RECT_COLOR, 0);
