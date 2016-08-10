@@ -409,7 +409,7 @@ window.Game = (function() {
      * Отрисовка текста
      */
     transferText: function(text, widthLine, x, y) {
-      var LINE_HEIGHT = 25;
+      var LINE_HEIGHT = 20;
       var TOP_MARGIN = 30;
       var LEFT_MARGIN = 10;
 
