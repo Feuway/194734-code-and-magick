@@ -394,37 +394,12 @@ window.Game = (function() {
     /**
      * Отрисовка текстового блока и его тени
      */
-    _drawRectangle: function(x, y, width, height, skewX, skewY, color, shadow) {
-      var mag = this.state.objects.filter(function(object) {
-        return object.type === ObjectType.ME;
-      })[0];
-      var startX = mag.x + mag.width + x + shadow;
-      var startY = mag.y - mag.height - y + shadow;
-      var endX = startX + width;
-      var endY = startY;
-
-      var widthX = width;
-      var skewWidth = skewX;
-      var heightY = height;
-      var skewHeight = skewY;
-
-      if (endX > this.canvas.width) {
-        startX = mag.x - x + shadow;
-        widthX *= -1;
-        skewWidth *= -1;
-      }
-
-      if (endY < 0) {
-        startY = mag.y + y + mag.height * 2 + shadow;
-        heightY *= -1;
-        skewHeight *= -1;
-      }
-
+    _drawRectangle: function(x, y, width, height, skewX, skewY, color) {
       this.ctx.beginPath();
-      this.ctx.moveTo(startX, startY);
-      this.ctx.lineTo(startX + widthX, startY + skewHeight);
-      this.ctx.lineTo(startX + widthX, startY + skewHeight + heightY);
-      this.ctx.lineTo(startX - skewWidth, startY + skewHeight * 2 + heightY);
+      this.ctx.moveTo(x, y);
+      this.ctx.lineTo(x + width, y + skewY);
+      this.ctx.lineTo(x + width, y + skewY + height);
+      this.ctx.lineTo(x - skewX, y + skewY * 2 + height);
       this.ctx.closePath();
       this.ctx.fillStyle = color;
       this.ctx.fill();
@@ -433,27 +408,34 @@ window.Game = (function() {
     /**
      * Отрисовка текста
      */
-    // transferText: function(text, widthLine) {
-    //   var mag = this.state.objects.filter(function(object) {
-    //     return object.type === ObjectType.ME;
-    //   })[0];
-    //   var words = text.split(' ');
-    //   var line = "";
-    //
-    //   for (var i = 0; i < words.length; i++) {
-    //     var testLine = line + words[i] + ' ';
-    //     var testWidth = this.measureText(testLine).width;
-    //     if (testWidth > widthLine) {
-    //
-    //     } else {
-    //       line = testLine;
-    //     }
-    //     var x = mag.x + mag.width;
-    //     var y = 75 + i * 20;
-    //
-    //     this.ctx.fillText(words[i], , y);
-    //   }
-    // },
+    transferText: function(text, widthLine, x, y) {
+      var LINE_HEIGHT = 25;
+      var TOP_MARGIN = 30;
+      var LEFT_MARGIN = 10;
+
+      x = x + LEFT_MARGIN;
+      y = y + TOP_MARGIN;
+
+      this.ctx.font = '16px PT Mono';
+      this.ctx.fillStyle = '#000';
+
+      var line = '';
+      var words = text.split(' ');
+
+      for (var i = 0; i < words.length; i++) {
+        var testLine = line + words[i] + ' ';
+        var testWidth = this.ctx.measureText(testLine).width;
+
+        if (testWidth > widthLine) {
+          this.ctx.fillText(line, x, y);
+          line = words[i] + ' ';
+          y += LINE_HEIGHT;
+        } else {
+          line = testLine;
+        }
+      }
+      this.ctx.fillText(line, x, y);
+    },
 
     /**
      * Отрисовка экрана паузы.
@@ -462,27 +444,59 @@ window.Game = (function() {
       var RECT_COLOR = '#ffffff';
       var SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
       var SHADOW_SHIFT = 10;
-      var RECTANGLE_WIDTH = 280;
+      var RECTANGLE_WIDTH = 300;
       var RECTANGLE_HEIGHT = 120;
+      var RECTANGLE_SKEW_X = 25;
+      var RECTANGLE_SKEW_Y = 10;
 
-      this._drawRectangle(30, 25, RECTANGLE_WIDTH, RECTANGLE_HEIGHT, 25, 10, SHADOW_COLOR, SHADOW_SHIFT);
-      this._drawRectangle(30, 25, RECTANGLE_WIDTH, RECTANGLE_HEIGHT, 25, 10, RECT_COLOR, 0);
+      var mag = this.state.objects.filter(function(object) {
+        return object.type === ObjectType.ME;
+      })[0];
 
-      this.ctx.font = '16px PT Mono';
-      this.ctx.fillStyle = '#000';
+      var startX = mag.x + mag.width + 20;
+      var startY = mag.y - mag.height - 55;
+      var endX = startX + RECTANGLE_WIDTH;
+
+      if (endX > this.canvas.width) {
+        startX = mag.x - RECTANGLE_WIDTH - 20;
+      }
+
+      if (startY < 0) {
+        startY = 0;
+      }
+
+      this._drawRectangle(
+          startX + SHADOW_SHIFT,
+          startY + SHADOW_SHIFT,
+          RECTANGLE_WIDTH,
+          RECTANGLE_HEIGHT,
+          RECTANGLE_SKEW_X,
+          RECTANGLE_SKEW_Y,
+          SHADOW_COLOR
+      );
+
+      this._drawRectangle(
+          startX,
+          startY,
+          RECTANGLE_WIDTH,
+          RECTANGLE_HEIGHT,
+          RECTANGLE_SKEW_X,
+          RECTANGLE_SKEW_Y,
+          RECT_COLOR
+      );
 
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          this.transferText('Ура!!! Мои поздравления.  Ты смог воспользоваться  фаерболом!');
+          this.transferText('Ура!!! Мои поздравления. Ты смог воспользоваться фаерболом!', 280, startX, startY);
           break;
         case Verdict.FAIL:
-          this.transferText('Неудача(((  Попробуй еще раз!');
+          this.transferText('Неудача((( Попробуй еще раз!', 280, startX, startY);
           break;
         case Verdict.PAUSE:
-          this.transferText('Пауза!  Нажми Space, чтобы  продолжить!');
+          this.transferText('Пауза! Нажми Space, чтобы продолжить!', 280, startX, startY);
           break;
         case Verdict.INTRO:
-          this.transferText('Добро пожаловать в игру!  Для начала игры нажми  Space. Чтобы пулять  фаерболлами жми Shift. А  если устал (нет) - ESC.');
+          this.transferText('Добро пожаловать в игру! Для начала игры нажми Space. Чтобы пулять фаерболлами жми Shift. А если устал (нет) - ESC.', 280, startX, startY);
           break;
       }
     },
