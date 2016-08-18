@@ -6,12 +6,12 @@ window.form = (function() {
 
   var formReview = document.querySelector('.review-form');
   var stars = formReview.elements['review-mark'];
-  var reviewName = document.querySelector('#review-name');
-  var reviewText = document.querySelector('#review-text');
-  var reviewFields = document.querySelector('.review-fields');
+  var reviewName = formReview.querySelector('#review-name');
+  var reviewText = formReview.querySelector('#review-text');
+  var reviewFields = formReview.querySelector('.review-fields');
   var reviewFieldsName = reviewFields.querySelector('.review-fields-name');
   var reviewFieldsText = reviewFields.querySelector('.review-fields-text');
-  var submitButton = document.querySelector('.review-submit');
+  var submitButton = formReview.querySelector('.review-submit');
 
   var toggleInvisible = function(element, boolean) {
     if (boolean) {
@@ -23,38 +23,26 @@ window.form = (function() {
 
   submitButton.disabled = true;
   toggleInvisible(reviewFieldsText, true);
+  reviewName.required = true;
 
   reviewName.oninput = validation;
   reviewText.oninput = validation;
-  stars.onchange = validation;
+  stars.forEach(function(item) {
+    item.onchange = validation;
+  });
 
   function validation() {
-    var isNameValid = reviewName.validity.valueMissing;
-    var isTextValid = reviewText.validity.valueMissing || reviewText.require;
-    var isFormValid = isNameValid && isTextValid;
-
-    reviewName.required = true;
     reviewText.required = stars.value < 3;
 
-    submitButton.disabled = isFormValid;
+    var isNameValid = !reviewName.validity.valueMissing;
+    var isTextValid = reviewText.required ? !reviewText.validity.valueMissing : true;
+    var isFormValid = isNameValid && isTextValid;
 
-    if (!isNameValid) {
-      toggleInvisible(reviewFieldsName, true);
-    } else {
-      toggleInvisible(reviewFieldsName, false);
-    }
+    toggleInvisible(reviewFieldsName, isNameValid);
+    toggleInvisible(reviewFieldsText, isTextValid);
+    toggleInvisible(reviewFields, isFormValid);
 
-    if (!isTextValid) {
-      toggleInvisible(reviewFieldsText, true);
-    } else {
-      toggleInvisible(reviewFieldsText, false);
-    }
-
-    if (!isFormValid) {
-      toggleInvisible(reviewFields, true);
-    } else {
-      toggleInvisible(reviewFields, false);
-    }
+    submitButton.disabled = !isFormValid;
   }
 
   var form = {
