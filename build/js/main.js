@@ -94,8 +94,16 @@
 	  var reviewFieldsText = reviewFields.querySelector('.review-fields-text');
 	  var submitButton = document.querySelector('.review-submit');
 	
+	  var toggleInvisible = function(element, boolean) {
+	    if (boolean) {
+	      element.classList.add('invisible');
+	    } else {
+	      element.classList.remove('invisible');
+	    }
+	  };
+	
 	  submitButton.disabled = true;
-	  reviewFieldsText.classList.add('invisible');
+	  toggleInvisible(reviewFieldsText, true);
 	
 	  reviewName.oninput = validation;
 	  reviewText.oninput = validation;
@@ -103,7 +111,7 @@
 	
 	  function validation() {
 	    var isNameValid = reviewName.validity.valueMissing;
-	    var isTextValid = reviewText.validity.valueMissing || !reviewText.require;
+	    var isTextValid = reviewText.validity.valueMissing || reviewText.require;
 	    var isFormValid = isNameValid && isTextValid;
 	
 	    reviewName.required = true;
@@ -112,22 +120,21 @@
 	    submitButton.disabled = isFormValid;
 	
 	    if (!isNameValid) {
-	      reviewFieldsName.classList.add('invisible');
+	      toggleInvisible(reviewFieldsName, true);
 	    } else {
-	      reviewFieldsName.classList.remove('invisible');
+	      toggleInvisible(reviewFieldsName, false);
 	    }
 	
-	    if (!reviewText.validity.valueMissing || !reviewText.required) {
-	      reviewFieldsText.classList.add('invisible');
+	    if (!isTextValid) {
+	      toggleInvisible(reviewFieldsText, true);
 	    } else {
-	      reviewFieldsText.classList.remove('invisible');
+	      toggleInvisible(reviewFieldsText, false);
 	    }
 	
-	    if (reviewFieldsName.classList.contains('invisible') &&
-	      reviewFieldsText.classList.contains('invisible')) {
-	      reviewFields.classList.add('invisible');
+	    if (!isFormValid) {
+	      toggleInvisible(reviewFields, true);
 	    } else {
-	      reviewFields.classList.remove('invisible');
+	      toggleInvisible(reviewFields, false);
 	    }
 	  }
 	
