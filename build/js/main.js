@@ -47,7 +47,7 @@
 	'use strict';
 	
 	__webpack_require__(1);
-	__webpack_require__(2);
+	__webpack_require__(3);
 	
 	(function() {
 	  var game = new window.Game(document.querySelector('.demo'));
@@ -77,7 +77,7 @@
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -126,6 +126,45 @@
 	    submitButton.disabled = !isFormValid;
 	  }
 	
+	//Подсчет кол-ва дней с последнего ДР
+	  var date = new Date();
+	  var lastYear;
+	
+	  function numberDays(month, day) {
+	    var dateOfBirth = new Date(lastYear, month, day);
+	    if (date.getMonth() > month) {
+	      lastYear = date.getFullYear();
+	    } else if (date.getMonth() == month) {
+	      if (date.getDate() >= day) {
+	        lastYear = date.getFullYear();
+	      } else {
+	        lastYear = date.getFullYear() - 1;
+	      }
+	    } else {
+	      lastYear = date.getFullYear() - 1;
+	    }
+	    dateOfBirth.setFullYear(lastYear);
+	    dateOfBirth.setMonth(month);
+	    dateOfBirth.setDate(day);
+	    return  Math.round((date - dateOfBirth) / 1000 / 60 / 60 / 24);
+	  }
+	
+	  var birthdayGraceHopper = {
+	    day: 9,
+	    month: 11
+	  };
+	
+	//куки
+	  var browserCookies = __webpack_require__(2);
+	
+	  formReview.onsubmit = function() {
+	    browserCookies.set('review-mark', stars.value, {expires: numberDays(birthdayGraceHopper.month, birthdayGraceHopper.day)});
+	    browserCookies.set('review-name', reviewName.value, {expires: numberDays(birthdayGraceHopper.month, birthdayGraceHopper.day)});
+	  };
+	
+	  stars.value = browserCookies.get('review-mark');
+	  reviewName.value = browserCookies.get('review-name');
+	
 	  var form = {
 	    onClose: null,
 	
@@ -157,6 +196,79 @@
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	exports.defaults = {};
+	
+	exports.set = function(name, value, options) {
+	  // Retrieve options and defaults
+	  var opts = options || {};
+	  var defaults = exports.defaults;
+	
+	  // Apply default value for unspecified options
+	  var expires  = opts.expires || defaults.expires;
+	  var domain   = opts.domain  || defaults.domain;
+	  var path     = opts.path     != undefined ? opts.path     : (defaults.path != undefined ? defaults.path : '/');
+	  var secure   = opts.secure   != undefined ? opts.secure   : defaults.secure;
+	  var httponly = opts.httponly != undefined ? opts.httponly : defaults.httponly;
+	
+	  // Determine cookie expiration date
+	  // If succesful the result will be a valid Date, otherwise it will be an invalid Date or false(ish)
+	  var expDate = expires ? new Date(
+	      // in case expires is an integer, it should specify the number of days till the cookie expires
+	      typeof expires == 'number' ? new Date().getTime() + (expires * 864e5) :
+	      // else expires should be either a Date object or in a format recognized by Date.parse()
+	      expires
+	  ) : '';
+	
+	  // Set cookie
+	  document.cookie = name.replace(/[^+#$&^`|]/g, encodeURIComponent)                // Encode cookie name
+	  .replace('(', '%28')
+	  .replace(')', '%29') +
+	  '=' + value.replace(/[^+#$&/:<-\[\]-}]/g, encodeURIComponent) +                  // Encode cookie value (RFC6265)
+	  (expDate && expDate.getTime() >= 0 ? ';expires=' + expDate.toUTCString() : '') + // Add expiration date
+	  (domain   ? ';domain=' + domain : '') +                                          // Add domain
+	  (path     ? ';path='   + path   : '') +                                          // Add path
+	  (secure   ? ';secure'           : '') +                                          // Add secure option
+	  (httponly ? ';httponly'         : '');                                           // Add httponly option
+	};
+	
+	exports.get = function(name) {
+	  var cookies = document.cookie.split(';');
+	
+	  // Iterate all cookies
+	  for(var i = 0; i < cookies.length; i++) {
+	    var cookie = cookies[i];
+	    var cookieLength = cookie.length;
+	
+	    // Determine separator index ("name=value")
+	    var separatorIndex = cookie.indexOf('=');
+	
+	    // IE<11 emits the equal sign when the cookie value is empty
+	    separatorIndex = separatorIndex < 0 ? cookieLength : separatorIndex;
+	
+	    // Decode the cookie name and remove any leading/trailing spaces, then compare to the requested cookie name
+	    if (decodeURIComponent(cookie.substring(0, separatorIndex).replace(/^\s+|\s+$/g, '')) == name) {
+	      return decodeURIComponent(cookie.substring(separatorIndex + 1, cookieLength));
+	    }
+	  }
+	
+	  return null;
+	};
+	
+	exports.erase = function(name, options) {
+	  exports.set(name, '', {
+	    expires:  -1,
+	    domain:   options && options.domain,
+	    path:     options && options.path,
+	    secure:   0,
+	    httponly: 0}
+	  );
+	};
+
+
+/***/ },
+/* 3 */
 /***/ function(module, exports) {
 
 	'use strict';
