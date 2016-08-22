@@ -53,7 +53,7 @@ window.form = (function() {
     var dateOfBirth = new Date(lastYear, month, day);
     if (date.getMonth() > month) {
       lastYear = date.getFullYear();
-    } else if (date.getMonth() == month) {
+    } else if (date.getMonth() === month) {
       if (date.getDate() >= day) {
         lastYear = date.getFullYear();
       } else {
@@ -65,7 +65,7 @@ window.form = (function() {
     dateOfBirth.setFullYear(lastYear);
     dateOfBirth.setMonth(month);
     dateOfBirth.setDate(day);
-    return  Math.round((date - dateOfBirth) / 1000 / 60 / 60 / 24);
+    return Math.round((date - dateOfBirth) / 1000 / 60 / 60 / 24);
   }
 
   var birthdayGraceHopper = {
