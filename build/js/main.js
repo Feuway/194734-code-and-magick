@@ -134,7 +134,7 @@
 	    var dateOfBirth = new Date(lastYear, month, day);
 	    if (date.getMonth() > month) {
 	      lastYear = date.getFullYear();
-	    } else if (date.getMonth() == month) {
+	    } else if (date.getMonth() === month) {
 	      if (date.getDate() >= day) {
 	        lastYear = date.getFullYear();
 	      } else {
@@ -146,7 +146,7 @@
 	    dateOfBirth.setFullYear(lastYear);
 	    dateOfBirth.setMonth(month);
 	    dateOfBirth.setDate(day);
-	    return  Math.round((date - dateOfBirth) / 1000 / 60 / 60 / 24);
+	    return Math.round((date - dateOfBirth) / 1000 / 60 / 60 / 24);
 	  }
 	
 	  var birthdayGraceHopper = {
@@ -156,14 +156,24 @@
 	
 	//куки
 	  var browserCookies = __webpack_require__(2);
+	  var expire = numberDays(birthdayGraceHopper.month, birthdayGraceHopper.day);
 	
-	  formReview.onsubmit = function() {
-	    browserCookies.set('review-mark', stars.value, {expires: numberDays(birthdayGraceHopper.month, birthdayGraceHopper.day)});
-	    browserCookies.set('review-name', reviewName.value, {expires: numberDays(birthdayGraceHopper.month, birthdayGraceHopper.day)});
+	
+	  stars.forEach(function(item) {
+	    item.onchange = function() {
+	      browserCookies.set('review-mark', stars.value, {expires: expire});
+	    }
+	  });
+	
+	  reviewName.oninput = function() {
+	    browserCookies.set('review-name', reviewName.value, {expires: expire});
 	  };
 	
-	  stars.value = browserCookies.get('review-mark');
-	  reviewName.value = browserCookies.get('review-name');
+	
+	  function setCookiesForm() {
+	    stars.value = browserCookies.get('review-mark');
+	    reviewName.value = browserCookies.get('review-name');
+	  }
 	
 	  var form = {
 	    onClose: null,
@@ -174,6 +184,7 @@
 	    open: function(cb) {
 	      formContainer.classList.remove('invisible');
 	      cb();
+	      setCookiesForm();
 	    },
 	
 	    close: function() {

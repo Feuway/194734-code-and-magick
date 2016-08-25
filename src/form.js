@@ -75,14 +75,24 @@ window.form = (function() {
 
 //куки
   var browserCookies = require('browser-cookies');
+  var expire = numberDays(birthdayGraceHopper.month, birthdayGraceHopper.day);
 
-  formReview.onsubmit = function() {
-    browserCookies.set('review-mark', stars.value, {expires: numberDays(birthdayGraceHopper.month, birthdayGraceHopper.day)});
-    browserCookies.set('review-name', reviewName.value, {expires: numberDays(birthdayGraceHopper.month, birthdayGraceHopper.day)});
+
+  stars.forEach(function(item) {
+    item.onchange = function() {
+      browserCookies.set('review-mark', stars.value, {expires: expire});
+    };
+  });
+
+  reviewName.oninput = function() {
+    browserCookies.set('review-name', reviewName.value, {expires: expire});
   };
 
-  stars.value = browserCookies.get('review-mark');
-  reviewName.value = browserCookies.get('review-name');
+
+  function setCookiesForm() {
+    stars.value = browserCookies.get('review-mark');
+    reviewName.value = browserCookies.get('review-name');
+  }
 
   var form = {
     onClose: null,
@@ -93,6 +103,7 @@ window.form = (function() {
     open: function(cb) {
       formContainer.classList.remove('invisible');
       cb();
+      setCookiesForm();
     },
 
     close: function() {
