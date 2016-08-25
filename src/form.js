@@ -43,6 +43,50 @@ window.form = (function() {
     toggleInvisible(reviewFields, isFormValid);
 
     submitButton.disabled = !isFormValid;
+
+    saveCookies();
+  }
+
+//Подсчет кол-ва дней с последнего ДР
+  var date = new Date();
+  var lastYear;
+
+  function numberDays(month, day) {
+    var dateOfBirth = new Date(lastYear, month, day);
+    if (date.getMonth() > month) {
+      lastYear = date.getFullYear();
+    } else if (date.getMonth() === month) {
+      if (date.getDate() >= day) {
+        lastYear = date.getFullYear();
+      } else {
+        lastYear = date.getFullYear() - 1;
+      }
+    } else {
+      lastYear = date.getFullYear() - 1;
+    }
+    dateOfBirth.setFullYear(lastYear);
+    dateOfBirth.setMonth(month);
+    dateOfBirth.setDate(day);
+    return Math.round((date - dateOfBirth) / 1000 / 60 / 60 / 24);
+  }
+
+  var birthdayGraceHopper = {
+    day: 9,
+    month: 11
+  };
+
+//куки
+  var browserCookies = require('browser-cookies');
+  var expire = numberDays(birthdayGraceHopper.month, birthdayGraceHopper.day);
+
+  function saveCookies() {
+    browserCookies.set('review-mark', stars.value, {expires: expire});
+    browserCookies.set('review-name', reviewName.value, {expires: expire});
+  }
+
+  function setCookiesForm() {
+    stars.value = browserCookies.get('review-mark');
+    reviewName.value = browserCookies.get('review-name');
   }
 
   var form = {
@@ -54,6 +98,7 @@ window.form = (function() {
     open: function(cb) {
       formContainer.classList.remove('invisible');
       cb();
+      setCookiesForm();
     },
 
     close: function() {
