@@ -43,6 +43,8 @@ window.form = (function() {
     toggleInvisible(reviewFields, isFormValid);
 
     submitButton.disabled = !isFormValid;
+
+    saveCookies();
   }
 
 //Подсчет кол-ва дней с последнего ДР
@@ -77,17 +79,10 @@ window.form = (function() {
   var browserCookies = require('browser-cookies');
   var expire = numberDays(birthdayGraceHopper.month, birthdayGraceHopper.day);
 
-
-  stars.forEach(function(item) {
-    item.onchange = function() {
-      browserCookies.set('review-mark', stars.value, {expires: expire});
-    };
-  });
-
-  reviewName.oninput = function() {
+  function saveCookies() {
+    browserCookies.set('review-mark', stars.value, {expires: expire});
     browserCookies.set('review-name', reviewName.value, {expires: expire});
-  };
-
+  }
 
   function setCookiesForm() {
     stars.value = browserCookies.get('review-mark');
