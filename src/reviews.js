@@ -1,3 +1,5 @@
+'use strict';
+
 var URL = 'http://localhost:1506/api/reviews';
 
 var loadReviews = function(url, callback) {
