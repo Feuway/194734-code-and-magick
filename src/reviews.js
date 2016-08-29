@@ -21,8 +21,6 @@ function JSONPCallback(reviews) {
   });
 }
 
-//task2
-
 var reviewsFilter = document.querySelector('.reviews-filter');
 var container = document.querySelector('.reviews-list');
 var template = document.querySelector('#review-template');
