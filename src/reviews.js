@@ -54,7 +54,7 @@ var getReviews = function(review) {
     reviewElement.classList.add('review-load-failure');
   };
 
-  TIMEOUT = timedOut(function() {
+  TIMEOUT = setTimeout(function() {
     reviewElement.classList.add('review-load-failure');
   }, IMAGE_LOAD_TIMEOUT);
 
