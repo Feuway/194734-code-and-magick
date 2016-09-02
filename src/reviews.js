@@ -40,16 +40,23 @@ var getReviews = function(review) {
   }
   var IMAGE_SIZE = 124;
   var pictureAuthor = new Image(IMAGE_SIZE, IMAGE_SIZE);
+  var TIMEOUT;
+  var IMAGE_LOAD_TIMEOUT = 10;
 
   pictureAuthor.onload = function() {
     reviewElement.replaceChild(pictureAuthor, reviewElement.querySelector('.review-author'));
     pictureAuthor.classList.add('review-author');
     pictureAuthor.title = review.author.name;
+    clearTimeout(TIMEOUT);
   };
 
   pictureAuthor.onerror = function() {
     reviewElement.classList.add('review-load-failure');
   };
+
+  TIMEOUT = timedOut(function() {
+    reviewElement.classList.add('review-load-failure');
+  }, IMAGE_LOAD_TIMEOUT);
 
   pictureAuthor.src = review.author.picture;
 
