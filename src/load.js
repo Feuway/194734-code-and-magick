@@ -2,7 +2,6 @@
 
 module.exports = (function() {
   window.JSONPRegistry = {};
-  var URL = 'http://localhost:1506/api/reviews';
 
   var loadReviews = function(url, callback) {
     var callbackName = 'cb' + String(Math.random()).slice(-6);
@@ -15,6 +14,6 @@ module.exports = (function() {
     document.body.appendChild(script);
   };
 
-  loadReviews(URL, JSONPCallback);
+  return loadReviews;
 })();
 

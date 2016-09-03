@@ -1,10 +1,12 @@
 'use strict';
 
 module.exports = (function() {
-  var load = require('./load');
-  var review = require('./review');
-  
+  var loadReviews = require('./load');
+  var getReviews = require('./review');
+
   var container = document.querySelector('.reviews-list');
+  var URL = 'http://localhost:1506/api/reviews';
+
 
   function JSONPCallback(reviews) {
     reviews.forEach(function(review) {
@@ -12,5 +14,5 @@ module.exports = (function() {
     });
   }
 
-  return JSONPCallback;
+  loadReviews(URL, JSONPCallback);
 })();
