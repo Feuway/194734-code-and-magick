@@ -1,8 +1,8 @@
 'use strict';
 
-require('./form');
-require('./game');
-require('./reviews');
+window.form = require('./form');
+window.Game = require('./game');
+window.reviews = require('./reviews');
 
 (function() {
   var game = new window.Game(document.querySelector('.demo'));
