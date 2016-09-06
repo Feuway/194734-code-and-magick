@@ -2,7 +2,9 @@
 
 window.form = require('./form');
 window.Game = require('./game');
+window.loadReviews = require('./load');
 window.reviews = require('./reviews');
+window.getReviews = require('./review');
 
 (function() {
   var game = new window.Game(document.querySelector('.demo'));
