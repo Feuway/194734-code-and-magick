@@ -1,15 +1,13 @@
 'use strict';
 
+var getReviews = require('./review');
 var container = document.querySelector('.reviews-list');
-var URL = 'http://localhost:1506/api/reviews';
+var reviewsFilter = document.querySelector('.reviews-filter');
 
-module.exports = (function() {
-
-  function JSONPCallback(reviews) {
-    reviews.forEach(function(review) {
-      container.appendChild(getReviews(review));
-    });
-  }
-
-  loadReviews(URL, JSONPCallback);
-})();
+module.exports = function(reviews) {
+  reviewsFilter.classList.add('invisible');
+  reviews.forEach(function(review) {
+    container.appendChild(getReviews(review));
+  });
+  reviewsFilter.classList.remove('invisible');
+};

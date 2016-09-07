@@ -1,11 +1,7 @@
 'use strict';
 
-
-var reviewsFilter = document.querySelector('.reviews-filter');
 var template = document.querySelector('#review-template');
 var templateContainer = 'content' in template ? template.content : template;
-
-reviewsFilter.classList.add('invisible');
 
 module.exports = function(review) {
   var reviewElement = templateContainer.querySelector('.review').cloneNode(true);
@@ -38,7 +34,7 @@ module.exports = function(review) {
 
   pictureAuthor.src = review.author.picture;
 
-  reviewsFilter.classList.remove('invisible');
+
   return reviewElement;
 };
 

@@ -1,15 +1,22 @@
 'use strict';
 
-window.form = require('./form');
-window.Game = require('./game');
-window.loadReviews = require('./load');
-window.reviews = require('./reviews');
-window.getReviews = require('./review');
+var URL = 'http://localhost:1506/api/reviews';
+var form = require('./form');
+var Game = require('./game');
+var loadReviews = require('./load');
+var reviews = require('./reviews');
+
+// var Gallery = require('./gallery');
+
+// var photoGallery = document.querySelector('.photogallery');
+// var screenshots = photoGallery.querySelectorAll('img');
+
+loadReviews(URL, reviews);
 
 (function() {
-  var game = new window.Game(document.querySelector('.demo'));
+  var game = new Game(document.querySelector('.demo'));
   game.initializeLevelAndStart();
-  game.setGameStatus(window.Game.Verdict.INTRO);
+  game.setGameStatus(Game.Verdict.INTRO);
 
   var formOpenButton = document.querySelector('.reviews-controls-new');
 
@@ -17,13 +24,13 @@ window.getReviews = require('./review');
   formOpenButton.onclick = function(evt) {
     evt.preventDefault();
 
-    window.form.open(function() {
-      game.setGameStatus(window.Game.Verdict.PAUSE);
+    form.open(function() {
+      game.setGameStatus(Game.Verdict.PAUSE);
       game.setDeactivated(true);
     });
   };
 
-  window.form.onClose = function() {
+  form.onClose = function() {
     game.setDeactivated(false);
   };
 })();
