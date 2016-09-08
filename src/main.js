@@ -6,10 +6,10 @@ var Game = require('./game');
 var loadReviews = require('./load');
 var reviews = require('./reviews');
 
-// var Gallery = require('./gallery');
+var Gallery = require('./gallery');
 
-// var photoGallery = document.querySelector('.photogallery');
-// var screenshots = photoGallery.querySelectorAll('img');
+var gallery = new Gallery(document.querySelector('.overlay-gallery'));
+gallery.init();
 
 loadReviews(URL, reviews);
 
