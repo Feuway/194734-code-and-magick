@@ -8,7 +8,7 @@ var reviews = require('./reviews');
 
 var Gallery = require('./gallery');
 
-var gallery = new Gallery(document.querySelector('.overlay-gallery'));
+var gallery = new Gallery('.photogallery');
 gallery.init();
 
 loadReviews(URL, reviews);

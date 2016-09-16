@@ -3,7 +3,7 @@
 var template = document.querySelector('#review-template');
 var templateContainer = 'content' in template ? template.content : template;
 
-module.exports = function(review) {
+var getReviews = function(review) {
   var reviewElement = templateContainer.querySelector('.review').cloneNode(true);
   reviewElement.querySelector('.review-text').textContent = review.description;
   var starReview = reviewElement.querySelector('.review-rating');
@@ -38,4 +38,36 @@ module.exports = function(review) {
   return reviewElement;
 };
 
+var Review = function(data) {
+  var self = this;
+  this.data = data;
+  this.element = getReviews(this.data);
 
+  this.yesAnswer = this.element.querySelector('.review-quiz-answer-yes');
+  this.noAnswer = this.element.querySelector('.review-quiz-answer-no');
+
+  this.yesAnswer.onclick = function() {
+    self.onYesAnswerClick();
+  };
+
+  this.noAnswer.onclick = function() {
+    self.onNoAnswerClick();
+  };
+
+  this.remove = function() {
+    this.yesAnswer.onclick = null;
+    this.noAnswer.onclick = null;
+  };
+};
+
+Review.prototype.onYesAnswerClick = function() {
+  this.yesAnswer.classList.add('review-quiz-answer-active');
+  this.noAnswer.classList.remove('review-quiz-answer-active');
+};
+
+Review.prototype.onNoAnswerClick = function() {
+  this.noAnswer.classList.add('review-quiz-answer-active');
+  this.yesAnswer.classList.remove('review-quiz-answer-active');
+};
+
+module.exports = Review;

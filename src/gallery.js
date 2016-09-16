@@ -1,10 +1,9 @@
 'use strict';
 
 var Gallery = function(gallery) {
-  var self = this;
-  self.pictures = [];
+  this.pictures = [];
   this.activePicture = 0;
-  this.photogallery = gallery;
+  this.photogallery = document.querySelector(gallery);
   this.overlayGallary = document.querySelector('.overlay-gallery');
   this.leftArrow = this.overlayGallary.querySelector('.overlay-gallery-control-left');
   this.rightArrow = this.overlayGallary.querySelector('.overlay-gallery-control-right');
@@ -14,10 +13,11 @@ var Gallery = function(gallery) {
 };
 
 Gallery.prototype.init = function() {
+  var self = this;
   var photogalleryImage = this.photogallery.querySelectorAll('.photogallery-image');
   Array.prototype.forEach.call(photogalleryImage, function(item, i) {
     var image = item.querySelector('img').src;
-    self.pictures.push(image.src);
+    self.pictures.push(image);
 
     item.onclick = function() {
       self.show(i);
@@ -26,48 +26,54 @@ Gallery.prototype.init = function() {
 };
 
 Gallery.prototype.show = function(number) {
-  self.overlayGallary.classList.remove('invisible');
-  self.setActivePicture(number);
+  this.overlayGallary.classList.remove('invisible');
+  this.setActivePicture(number);
 
-  this.closeGallery.onclick = function() {
-    self.closedGallery();
-  };
-
-  this.leftArrow.onclick = function() {
+  this.onClickLeftArrow = function() {
     number--;
-    self.onClickArrow(number);
+    if (0 <= number) {
+      this.onClickArrow(number);
+    } else {
+      number = 0;
+    }
   };
 
-  this.rightArrow.onclick = function() {
+  this.onClickRightArrow = function() {
     number++;
-    self.onClickArrow(number);
+    if (number <= this.pictures.length - 1) {
+      this.onClickArrow(number);
+    } else {
+      number = this.pictures.length - 1;
+    }
   };
+
+  this.closeGallery.addEventListener('click', this.closedGallery.bind(this));
+  this.leftArrow.addEventListener('click', this.onClickLeftArrow.bind(this));
+  this.rightArrow.addEventListener('click', this.onClickRightArrow.bind(this));
 };
 
 Gallery.prototype.hide = function() {
-  self.overlayGallary.classList.add('invisible');
+  this.overlayGallary.classList.add('invisible');
 
-  this.closeGallery.onclick = null;
-
-  this.leftArrow.onclick = null;
-
-  this.rightArrow.onclick = null;
+  this.closeGallery.removeEventListener('click', this.closedGallery.bind(this));
+  this.leftArrow.removeEventListener('click', this.onClickLeftArrow.bind(this));
+  this.rightArrow.removeEventListener('click', this.onClickRightArrow.bind(this));
 };
 
 Gallery.prototype.setActivePicture = function(number) {
-  self.activePicture = number;
+  this.activePicture = number + 1;
   var picture = new Image();
   picture.src = this.pictures[number];
 
-  this.galleryPreview = self.overlayGallary.querySelector('.overlay-gallery-preview');
-  this.galleryPreview.appendChild(picture);
-  this.galleryPreview.replaceChild(picture, picture);//второй арг.
+  this.previewNumberCurrent.textContent = this.activePicture;
+  this.previewNumberTotal.textContent = this.pictures.length;
 
-  self.previewNumberCurrent = self.activePicture;
+  this.galleryPreview = this.overlayGallary.querySelector('.overlay-gallery-preview');
+  this.galleryPreview.replaceChild(picture, this.galleryPreview.firstChild);
 };
 
 Gallery.prototype.closedGallery = function() {
-  self.hide();
+  this.hide();
 };
 
 Gallery.prototype.onClickArrow = function(i) {
