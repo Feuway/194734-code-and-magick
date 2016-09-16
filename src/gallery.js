@@ -31,7 +31,7 @@ Gallery.prototype.show = function(number) {
 
   this.onClickLeftArrow = function() {
     number--;
-    if (0 <= number) {
+    if (number) {
       this.onClickArrow(number);
     } else {
       number = 0;
