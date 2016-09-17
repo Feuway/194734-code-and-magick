@@ -39,25 +39,19 @@ var getReviews = function(review) {
 };
 
 var Review = function(data) {
-  var self = this;
   this.data = data;
   this.element = getReviews(this.data);
 
   this.yesAnswer = this.element.querySelector('.review-quiz-answer-yes');
   this.noAnswer = this.element.querySelector('.review-quiz-answer-no');
 
-  this.yesAnswer.onclick = function() {
-    self.onYesAnswerClick();
-  };
+  this.yesAnswer.addEventListener('click', this.onYesAnswerClick.bind(this));
+  this.noAnswer.addEventListener('click', this.onNoAnswerClick.bind(this));
+};
 
-  this.noAnswer.onclick = function() {
-    self.onNoAnswerClick();
-  };
-
-  this.remove = function() {
-    this.yesAnswer.onclick = null;
-    this.noAnswer.onclick = null;
-  };
+Review.prototype.remove = function() {
+  this.yesAnswer.removeEventListener('click', this.onYesAnswerClick.bind(this));
+  this.noAnswer.removeEventListener('click', this.onNoAnswerClick.bind(this));
 };
 
 Review.prototype.onYesAnswerClick = function() {

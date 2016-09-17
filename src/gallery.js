@@ -29,24 +29,6 @@ Gallery.prototype.show = function(number) {
   this.overlayGallary.classList.remove('invisible');
   this.setActivePicture(number);
 
-  this.onClickLeftArrow = function() {
-    number--;
-    if (number >= 0) {
-      this.onClickArrow(number);
-    } else {
-      number = 0;
-    }
-  };
-
-  this.onClickRightArrow = function() {
-    number++;
-    if (number <= this.pictures.length - 1) {
-      this.onClickArrow(number);
-    } else {
-      number = this.pictures.length - 1;
-    }
-  };
-
   this.closeGallery.addEventListener('click', this.closedGallery.bind(this));
   this.leftArrow.addEventListener('click', this.onClickLeftArrow.bind(this));
   this.rightArrow.addEventListener('click', this.onClickRightArrow.bind(this));
@@ -61,11 +43,11 @@ Gallery.prototype.hide = function() {
 };
 
 Gallery.prototype.setActivePicture = function(number) {
-  this.activePicture = number + 1;
+  this.activePicture = number;
   var picture = new Image();
   picture.src = this.pictures[number];
 
-  this.previewNumberCurrent.textContent = this.activePicture;
+  this.previewNumberCurrent.textContent = this.activePicture + 1;
   this.previewNumberTotal.textContent = this.pictures.length;
 
   this.galleryPreview = this.overlayGallary.querySelector('.overlay-gallery-preview');
@@ -76,8 +58,22 @@ Gallery.prototype.closedGallery = function() {
   this.hide();
 };
 
-Gallery.prototype.onClickArrow = function(i) {
-  this.setActivePicture(i);
+Gallery.prototype.onClickLeftArrow = function() {
+  this.activePicture--;
+  if (this.activePicture >= 0) {
+    this.setActivePicture(this.activePicture);
+  } else {
+    this.activePicture = 0;
+  }
+};
+
+Gallery.prototype.onClickRightArrow = function() {
+  this.activePicture++;
+  if (this.activePicture <= this.pictures.length - 1) {
+    this.setActivePicture(this.activePicture);
+  } else {
+    this.activePicture = this.pictures.length - 1;
+  }
 };
 
 module.exports = Gallery;
