@@ -9,7 +9,7 @@ var Gallery = require('./gallery');
 var gallery = new Gallery('.photogallery');
 gallery.init();
 
-// loadReviews(URL, reviews);
+reviews();
 
 (function() {
   var game = new Game(document.querySelector('.demo'));
