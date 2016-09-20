@@ -1,9 +1,7 @@
 'use strict';
 
-var URL = 'http://localhost:1506/api/reviews';
 var form = require('./form');
 var Game = require('./game');
-var loadReviews = require('./load');
 var reviews = require('./reviews');
 
 var Gallery = require('./gallery');
@@ -11,7 +9,7 @@ var Gallery = require('./gallery');
 var gallery = new Gallery('.photogallery');
 gallery.init();
 
-loadReviews(URL, reviews);
+// loadReviews(URL, reviews);
 
 (function() {
   var game = new Game(document.querySelector('.demo'));
