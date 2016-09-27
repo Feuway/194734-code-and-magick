@@ -18,19 +18,20 @@ module.exports = function(list, filterID) {
       break;
 
     case 'reviews-good':
-      var sortNotLessThree = list.filter(function(element) {
+      var ratingNotLessThree = list.filter(function(element) {
         return element.rating >= 3;
       });
-      return sortNotLessThree .sort(function(a, b) {
+
+      return ratingNotLessThree.sort(function(a, b) {
         return b.rating - a.rating;
       });
       break;
 
     case 'reviews-bad':
-      var sortLessThree = list.filter(function(element) {
+      var ratingLessThree = list.filter(function(element) {
         return element.rating < 3;
       });
-      return sortLessThree.sort(function(a, b) {
+      return ratingLessThree.sort(function(a, b) {
         return a.rating - b.rating;
       });
       break;
@@ -41,5 +42,4 @@ module.exports = function(list, filterID) {
       });
       break;
   }
-
 };

@@ -2,7 +2,6 @@
 
 var URL = 'http://localhost:1506/api/reviews';
 var Review = require('./review');
-var load = require('./load');
 var container = document.querySelector('.reviews-list');
 var reviewsFilter = document.querySelector('.reviews-filter');
 var reviewsMore = document.querySelector('.reviews-controls-more');
@@ -20,36 +19,31 @@ var renderReviews = function(reviews) {
   reviewsFilter.classList.remove('invisible');
 };
 
-var loadReviews = function(filterID, currentPage) {
-  load(URL, {
-    from: currentPage * PAGE_SIZE,
-    to: currentPage * PAGE_SIZE + PAGE_SIZE,
-    filter: filterID
-  }, renderReviews);
+module.exports = function(callback) {
+  var loadReviews = function(filterID, currentPage) {
+    callback(URL, {
+      from: currentPage * PAGE_SIZE,
+      to: currentPage * PAGE_SIZE + PAGE_SIZE,
+      filter: filterID
+    }, renderReviews);
+  };
+
+  var changeReviewsFilter = function(filterID) {
+    container.innerHTML = '';
+    pageNumber = 0;
+    activeFilter = filterID;
+
+    loadReviews(filterID, pageNumber);
+  };
+
+  reviewsMore.addEventListener('click', function() {
+    pageNumber++;
+    loadReviews(activeFilter, pageNumber);
+  });
+
+  reviewsFilter.addEventListener('change', function(evt) {
+    changeReviewsFilter(evt.target.id);
+  }, true);
+
+  changeReviewsFilter(activeFilter);
 };
-
-var changeReviewsFilter = function(filterID) {
-  container.innerHTML = '';
-  pageNumber = 0;
-  activeFilter = filterID;
-
-  loadReviews(filterID, pageNumber);
-};
-
-reviewsMore.addEventListener('click', function() {
-  pageNumber++;
-  loadReviews(activeFilter, pageNumber);
-  console.log('123');
-});
-
-reviewsFilter.addEventListener('change', function(evt) {
-  console.log(evt.target.id);
-  changeReviewsFilter(evt.target.id);
-}, true);
-
-changeReviewsFilter(activeFilter);
-
-module.exports = function() {
-};
-
-
