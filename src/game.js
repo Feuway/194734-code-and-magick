@@ -810,7 +810,7 @@ module.exports = (function() {
     if (scrollTop > document.body.scrollTop) {
       shiftClouds += stepShifting;
       clouds.style.left = shiftClouds + 'px';
-    } else  if (scrollTop < document.body.scrollTop) {
+    } else if (scrollTop < document.body.scrollTop) {
       shiftClouds -= stepShifting;
       clouds.style.left = shiftClouds + 'px';
     }
