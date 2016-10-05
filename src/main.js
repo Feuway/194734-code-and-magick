@@ -1,17 +1,16 @@
 'use strict';
 
-var URL = 'http://localhost:1506/api/reviews';
 var form = require('./form');
 var Game = require('./game');
-var loadReviews = require('./load');
 var reviews = require('./reviews');
+var load = require('./load');
 
 var Gallery = require('./gallery');
 
 var gallery = new Gallery('.photogallery');
 gallery.init();
 
-loadReviews(URL, reviews);
+reviews(load);
 
 (function() {
   var game = new Game(document.querySelector('.demo'));

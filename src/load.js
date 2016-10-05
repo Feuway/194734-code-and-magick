@@ -1,16 +1,16 @@
 'use strict';
 
-window.JSONPRegistry = {};
+module.exports = function(url, params, callback) {
+  var xhr = new XMLHttpRequest();
 
-module.exports = function(url, callback) {
-  var callbackName = 'cb' + String(Math.random()).slice(-6);
-  window.JSONPRegistry[callbackName] = function(data) {
-    callback(data);
+  xhr.onload = function(evt) {
+    var loadedData = JSON.parse(evt.target.response);
+    callback(loadedData);
   };
 
-  var script = document.createElement('script');
-  script.src = url + '?callback=JSONPRegistry.' + callbackName;
-  document.body.appendChild(script);
+  xhr.open('GET', url + '?from=' + params.from + '&to=' + params.to + '&filter=' + params.filter);
+  xhr.send();
 };
+
 
 

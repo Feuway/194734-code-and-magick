@@ -784,6 +784,41 @@ module.exports = (function() {
     }
   };
 
+  var clouds = document.querySelector('.header-clouds');
+  var demo = document.querySelector('.demo');
+  var shiftClouds = 0;
+  var stepShifting = 0;
+  var scrollTop = 0;
+  var THROTTLE_TIMEOUT = 100;
+  var lastCall = 0;
+
+  function onScroll() {
+    if (Date.now() - lastCall >= THROTTLE_TIMEOUT) {
+      if (clouds.getBoundingClientRect().bottom >= 0) {
+        stepShifting = 15;
+      } else {
+        stepShifting = 0;
+      }
+
+      if (demo.getBoundingClientRect().bottom < 0) {
+        Game.setGameStatus(Game.Verdict.PAUSE);
+      }
+
+      lastCall = Date.now();
+    }
+
+    if (scrollTop > document.body.scrollTop) {
+      shiftClouds += stepShifting;
+      clouds.style.left = shiftClouds + 'px';
+    } else if (scrollTop < document.body.scrollTop) {
+      shiftClouds -= stepShifting;
+      clouds.style.left = shiftClouds + 'px';
+    }
+    scrollTop = document.body.scrollTop;
+  }
+
+  window.addEventListener('scroll', onScroll);
+
   Game.Verdict = Verdict;
 
   return Game;
